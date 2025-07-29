@@ -1,0 +1,69 @@
+#Instantiating a small convnet for 3D models soybean
+from keras import layers
+from keras import models
+
+model = models.Sequential()
+model.add(layers.Conv2D(32, (3, 3, 3), activation='relu', input_shape=(200, 200, 3))) 
+
+#first convolution layer with 3×3x3 filter; 32 - depth of maps 
+model.add(layers.MaxPooling2D((2, 2))) 
+
+#MaxPooling - we map 2×2x2 size to 1 pixel, we take the maximum value from 4 pixels, object map size 148x148x3
+model.add(Dropout(0.2)) #20% of layers abandoned,
+
+#second convolution layer with 3×3x3 filter; 64 - map depth
+model.add(layers.Conv2D(64, (3, 3, 3), activation='relu'))
+#MaxPooling - we map the 2×2 size to 1 pixel, taking the maximum value from 4 pixels,
+model.add(layers.MaxPooling2D((2, 2, 2))) model.add(Dropout(0.2)) #20% of layers abandoned
+
+#third convolution layer with 3×3x3 filter; 128 - map depth
+model.add(layers.Conv2D(128, (3, 3), activation='relu')) model.add(layers.MaxPooling2D((2, 2))) #MaxPooling - we map the 2×2 size to 1 pixel, taking the maximum value from 4 pixels,
+model.add(Dropout(0.2)) #20% of layers abandoned,
+
+#fourth convolution layer with 3×3x3 filter; 128 - depth of maps
+model.add(layers.Conv2D(128, (3, 3, 3), activation='relu')) model.add(layers.MaxPooling2D((2, 2))) ##MaxPooling - we map the size of 2×2x2 to 1 pixel, take the maximum value from 4 pixels, object map size 7x7x7,
+model.add(Dropout(0.2)) #20% of layers abandoned,
+
+model.add(layers.Flatten()) #As you can see, the (3, 3, 64) outputs are flattened into vectors of shape (576) before going through two Dense layers.
+model.add(layers.Dense(512, activation='relu'))
+model.add(layers.Dense(1, activation='sigmoid'))
+
+model.summary()
+
+#Use of ImageDataGenerator to read images from catalogues
+from keras import optimizers
+model.compile(loss='binary_crossentropy',
+              optimizer=optimizers.RMSprop(lr=1e-4),
+              metrics=['acc'])
+from keras.preprocessing.image import ImageDataGenerator
+train_datagen = ImageDataGenerator(rescale=1./255)
+test_datagen = ImageDataGenerator(rescale=1./255) #Scales all images by 1/255
+
+train_generator = train_datagen.flow_from_directory(
+    train_dir, #Destination directory
+    target_size=(200, 200, 200), #Changes the size of all images to 150×150x150
+    batch_size=20,
+    class_mode='binary') #Creation of binary labels
+validation_generator = test_datagen.flow_from_directory(
+    validation_dir, #Destination directory
+    target_size=(200, 200, 200), #Changes the size of all images to 150×150x150
+    batch_size=20,
+    class_mode='binary') #Creation of binary labels
+import scipy
+for data_batch, labels_batch in train_generator:
+    print('data batch shape:', data_batch.shape)
+    print('labels batch shape:', labels_batch.shape)
+    break
+
+#Model fitting with batch generator
+history = model.fit_generator(
+    train_generator,
+    steps_per_epoch=100,
+    epochs=64, #epoch - one epoch marks the passage of the entire collection through the network and back
+    validation_data=validation_generator,
+    validation_steps=50)
+
+#Recording of model
+model.save('onion_1.h5')
+
+Code 3. Code programming the computational function of the proposed CNN for geometric classification of soybean
