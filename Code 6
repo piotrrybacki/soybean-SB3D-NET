@@ -1,0 +1,39 @@
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import LinearRegression
+from numpy import means
+from numpy import absolute
+from numpy import sqrt
+import pandas as pd
+
+def validate_cross_k_fold(data, classifier, k):
+    try:
+        soybean = pd.DataFrame(soybean)
+    except: 
+        #if we don't have the same number of soybean 3D models in each 
+        #class then we populate it with elements that don't change the result: (-9999, -9999)
+        biggest = 0
+        for arr in data.values():
+            biggest = max(biggest, len(arr))
+        for arr in dane.values():
+            while len(arr) < biggest:
+                arr.append((-99999,-99999))
+        soybean = pd.DataFrame(soybean)
+    dl = len(soybean)
+    while dl % k != 0:
+        if dl / k > 1:
+            k += 1
+        else:
+            k -=1
+    image_org = int(len(soybean) / k)
+    results = []
+    for i in range(k):
+        test = soybean[i * image_org:(i+1) * image_org + 1].to_dict(orient="list")
+        training = pd.concat([soybean[:i * image_org], soybean [(i+1) * image_org + 1:]]).to_dict(orient="list")
+        classifier.train(train)
+        results.append(classifier.test(test))
+        classifier.null() #We write null functions to start with a new model
+    return sum(results) / len(results)
+
+Code 6. Validate_cross_k_fold
