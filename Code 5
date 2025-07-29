@@ -1,0 +1,47 @@
+#Code for assigning labels with geometric parameters of soybean.
+import plotly
+import plotly.express as px
+import plotly.graph_objects as go
+from skimage import data, filters, measure, morphology
+img = data.coins()
+# Binary image, post-process the binary mask and compute labels
+threshold = filters.threshold_otsu(img)
+mask = img > threshold
+mask = morphology.remove_small_objects(mask, 50)
+mask = morphology.remove_small_holes(mask, 50)
+labels = measure.label(mask)
+fig = px.imshow(img, binary_string=True)
+fig.update_traces(hoverinfo='skip') # hover is only for label info
+props = measure.regionprops(labels, img)
+properties = ['Length', 'Width', 'Thickness', 'Marker length', 'Marker Width', ]
+for index in range(1, labels.max()):
+    label_i = props[index].label
+    contour = measure.find_contours(labels == label_i, 0.5)[0]
+    y, x = contour.T
+    hoverinfo = ''
+    for prop_name in properties:
+        hoverinfo += f'<b>{prop_name}: {getattr(props[index], prop_name):.2f}</b><br>'
+    fig.add_trace(go.Scatter(
+        x=x, y=y, name=label_i,
+        mode='lines', fill='toself', showlegend=False,
+        hovertemplate=hoverinfo, hoveron='points+fills'))
+plotly.io.show(fig
+)
+batch_test = next(iter(mnist_test.batch(10)))
+preds = model(batch_test[0])
+tf.print(preds.shape)
+preds = tf.argmax(preds, axis=1)
+print(preds)
+fig = plt.figure(figsize=(10, 4))
+for i in range(10):
+ax = fig.add_subplot(6, 10, i+1)
+ax.imshow(img, cmap='gray_r')
+ax.text(Extra class, '{}'.format(preds[i]),
+size=15, color='blue',
+horizontalalignment='center',
+verticalalignment='center',
+transform=ax.transAxes)
+plt.show()
+ #plt.savefig('figure/15_13.png', dpi=300)
+
+Code 5. Programming code that searches for the 3D models with the highest probability of belonging and assigns the corresponding label
