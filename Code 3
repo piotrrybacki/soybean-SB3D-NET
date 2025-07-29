@@ -66,4 +66,4 @@ history = model.fit_generator(
 #Recording of model
 model.save('onion_1.h5')
 
-Code 3. Code programming the computational function of the proposed CNN for geometric classification of soybean
+Code 3. Code programming the computational function of the proposed 3D-CNN for geometric classification of soybean
