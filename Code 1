@@ -1,0 +1,24 @@
+import os
+import pathlib
+import tensorflow as tf
+onion_path = pathlib.Path("soybean")
+file_list = sorted([str(path) for path in soybeandir_path.glob("*.jpg")])
+print(file_list)
+
+import matplotlib.pyplot as plt
+
+# define figure
+fig = plt.figure(figsize=(100, 50))
+for i, file in enumerate(file_list):
+    onion_raw = tf.io.read_file(file)
+    img = tf.image.decode_image(soybean_raw)
+    print("figsize: ", img.shape)
+    ax = fig.add_subplot(1, 257, i+1)
+    ax.set_xticks([]); ax.set_yticks([])
+    ax.imshow(img)
+    ax.set_title(os.path.basename(file), size = 5)
+
+# plt.savefig('soybean.pdf')
+plt.tight_layout()
+
+Code 1. Code that generates a list of names of soybean to be imaged, visualised and sized
