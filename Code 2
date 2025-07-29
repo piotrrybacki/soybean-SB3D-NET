@@ -1,0 +1,88 @@
+import os, shutil
+import scipy as scipy
+import tf
+import total as total
+from keras.utils.version_utils import training
+
+original_dataset_dir = '/soybean/train/train'
+
+base_dir = './soybean_small'
+os.mkdir(base_dir)
+
+#Directories for the training, validation, and test splits
+train_dir = os.path.join(base_dir, 'train') #teaching directory
+os.mkdir(train_dir)
+validation_dir = os.path.join(base_dir, 'validation') #validation directory
+os.mkdir(validation_dir)
+test_dir = os.path.join(base_dir, 'test') #test directory
+os.mkdir(test_dir)
+
+#First class soybean training catalogue
+train_ first_class_dir = os.path.join(train_dir, 'first_class') 
+os.mkdir(train_ first_class_dir)
+
+#Second class soybean training catalogue
+train_second_class_dir = os.path.join(train_dir, 'second_class') 
+os.mkdir(train_ second_class_dir)
+
+#Training catalogue of unclassified soybean 
+train_not_classified_dir = os.path.join(train_dir, 'not_classified') 
+os.mkdir(train_not_classified_dir)
+
+#Validation catalogue of extra class soybean
+validation_extra_class_dir = os.path.join(validation_dir, 'extra_class') 
+os.mkdir(validation_extra_class_dir)
+
+#Validation catalogue of first class soybean
+validation_ first_class_dir = os.path.join(validation_dir, 'first_class') 
+os.mkdir(validation_ first_class_dir)
+
+#Validation catalogue of second class soybean
+validation_second_class_dir = os.path.join(validation_dir, 'second_class') 
+os.mkdir(validation_ second_class_dir)
+
+#Validation catalogue of unclassified soybean 
+validation_not_classified_dir = os.path.join(validation_dir, 'not_classified') 
+os.mkdir(validation_not_classified_dir)
+
+#First class soybean test catalogue
+test_ first_class_dir = os.path.join(test_dir, 'first_class') 
+os.mkdir(test_ first_class_dir)
+
+#Test catalogue of second class soybean
+test_second_class_dir = os.path.join(test_dir, 'second_class') 
+os.mkdir(test_ second_class_dir)
+
+#Test catalogue of unclassified soybean 
+test_not_classified_dir = os.path.join(test_dir, 'not_classified') 
+os.mkdir(test_not_classified_dir)
+
+#Copying 300 soybean images train_dir
+fnames = ['train.{}.jpg'.format(i) for i in range(300)]
+for fname in fnames:
+    src = os.path.join(original_dataset_dir, fname)
+    dst = os.path.join(train_dir, fname)
+    shutil.copyfile(src, dst)
+
+#Copying 100 soybean images into validation_dir  
+fnames = ['validation.{}.jpg'.format(i) for i in range(300, 400)]
+for fname in fnames:
+    src = os.path.join(original_dataset_dir, fname)
+    dst = os.path.join(validation_dir, fname)
+    shutil.copyfile(src, dst)
+
+#Copying 100 soybean images into test_dir 
+fnames = ['test.{}.jpg'.format(i) for i in range(400, 500)]
+for fname in fnames:
+    src = os.path.join(original_dataset_dir, fname)
+    dst = os.path.join(test_dir, fname)
+    shutil.copyfile(src, dst)
+
+print('total training images:', len(os.listdir(train_dir)))
+total_training_images: 300
+print('total validation images:', len(os.listdir(validation_dir)))
+total_validation_images: 100
+print('total test images:', len(os.listdir(test_dir)))
+total_test_images: 100
+
+Code 2. Code to automatically copy models 3D from the source directory to the learning, validation and test directories
